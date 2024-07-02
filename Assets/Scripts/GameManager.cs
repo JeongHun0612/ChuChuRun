@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 
     [Header("# Game Control")]
     public bool isLive;
+    public int playerId;
     public float globalSpeed;
     public float score;
 
@@ -24,10 +25,9 @@ public class GameManager : MonoBehaviour
 
         isLive = false;
 
-        if (!PlayerPrefs.HasKey("Score"))
-        {
-            PlayerPrefs.SetFloat("Score", 0);
-        }
+        InitPlayerPrefs();
+
+        playerId = PlayerPrefs.GetInt("PlayerId");
     }
 
     private void Update()
@@ -60,7 +60,32 @@ public class GameManager : MonoBehaviour
         isLive = false;
         uiGameOver.SetActive(true);
 
+        Debug.Log(score);
+
         float highScore = PlayerPrefs.GetFloat("Score");
         PlayerPrefs.SetFloat("Score", Mathf.Max(highScore, score));
+
+
+        // 현재 랭크 데이터 업데이트
+        RankData rankData = new RankData { playerId = this.playerId, score = this.score };
+        DataManager.instance.UpdateRankData(rankData);
+    }
+
+    public void SelectCharcter()
+    {
+        PlayerPrefs.SetInt("PlayerId", playerId);
+    }
+
+    private void InitPlayerPrefs()
+    {
+        if (!PlayerPrefs.HasKey("Score"))
+        {
+            PlayerPrefs.SetFloat("Score", 0);
+        }
+
+        if (!PlayerPrefs.HasKey("PlayerId"))
+        {
+            PlayerPrefs.SetInt("PlayerId", 0);
+        }
     }
 }

@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Select_SangChu
+  m_Controller: {fileID: 9100000, guid: 7013c73bed87de94bac35c9960304f13, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 74eb4d4992013214089d925ccadcf9cb, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: d543dea723abc724c8761fd8604bc3fd, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: a1c1496bf137c904486ea1b12bbec329, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 8fe09ac6b47913d4891c3f1645df938c, type: 2}

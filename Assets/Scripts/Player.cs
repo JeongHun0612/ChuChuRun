@@ -45,9 +45,7 @@ public class Player : MonoBehaviour
 
     private void OnEnable()
     {
-        int ran = Random.Range(0, runtimeAnim.Length);
-        anim.runtimeAnimatorController = runtimeAnim[ran];
-
+        anim.runtimeAnimatorController = runtimeAnim[GameManager.instance.playerId];
         ChangeAnim(State.Jump);
     }
 
