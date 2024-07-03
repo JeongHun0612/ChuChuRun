@@ -16,9 +16,10 @@ public class SoundManager : MonoBehaviour
     private AudioSource[] sfxPlayers;
     private int channelIndex;
 
-    public enum BGM { Title, Run };
-    public enum SFX { Jump, Hit, Click };
+    public Player player;
 
+    public enum BGM { Title, Run };
+    public enum SFX { Jump, Hit, Click, Select, Coin };
 
     private void Awake()
     {
@@ -35,8 +36,6 @@ public class SoundManager : MonoBehaviour
         bgmPlayer.playOnAwake = false;
         bgmPlayer.loop = true;
         bgmPlayer.volume = bgmVolume;
-        bgmPlayer.clip = bgmClips[(int)BGM.Title];
-        bgmPlayer.Play();
 
 
         // SFX 플레이어 초기화
@@ -70,6 +69,23 @@ public class SoundManager : MonoBehaviour
             channelIndex = loopIndex;
 
             sfxPlayers[loopIndex].clip = sfxClips[(int)sfx];
+            sfxPlayers[loopIndex].Play();
+            break;
+        }
+    }
+
+    [VisibleEnum(typeof(SFX))]
+    public void PlaySFX(int sfx)
+    {
+        for (int i = 0; i < sfxPlayers.Length; i++)
+        {
+            int loopIndex = (i + channelIndex) % sfxPlayers.Length;
+
+            if (sfxPlayers[loopIndex].isPlaying) continue;
+
+            channelIndex = loopIndex;
+
+            sfxPlayers[loopIndex].clip = sfxClips[sfx];
             sfxPlayers[loopIndex].Play();
             break;
         }

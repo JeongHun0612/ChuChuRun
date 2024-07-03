@@ -100,3 +100,6 @@ MonoBehaviour:
   onMove:
     m_PersistentCalls:
       m_Calls: []
+  minSpeed: 1
+  maxSpeed: 1
+  speed: 0

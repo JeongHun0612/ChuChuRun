@@ -113,6 +113,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  minSpeed: 0.2
+  maxSpeed: 0.4
+  speed: 0
 --- !u!114 &1263506275383907539
 MonoBehaviour:
   m_ObjectHideFlags: 0

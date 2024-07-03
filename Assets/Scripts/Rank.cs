@@ -5,18 +5,13 @@ public class Rank : MonoBehaviour
 {
     public Sprite[] iconSprites;
 
-    private RankData[] rankDatas;
-
-    void Awake()
-    {
-        rankDatas = DataManager.instance.LoadRankData();
-    }
-
     private void OnEnable()
     {
+        RankData[] rankDatas = DataManager.instance.rankDatas;
+
         for (int index = 0; index < rankDatas.Length; index++)
         {
-            int playerId = rankDatas[index].playerId;
+            int playerId = rankDatas[index].playerId + 1;
             float score = rankDatas[index].score;
 
             transform.GetChild(index).GetComponentInChildren<Image>().sprite = iconSprites[playerId];

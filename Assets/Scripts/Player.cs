@@ -45,6 +45,7 @@ public class Player : MonoBehaviour
 
     private void OnEnable()
     {
+        // 선택한 캐릭터의 따라 애니메이션 변경
         anim.runtimeAnimatorController = runtimeAnim[GameManager.instance.playerId];
         ChangeAnim(State.Jump);
     }
@@ -67,6 +68,19 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // 코인 Trigger
+        if (collision.CompareTag("Coin"))
+        {
+            SoundManager.instance.PlaySFX(SoundManager.SFX.Coin);
+
+            collision.gameObject.SetActive(false);
+            GameManager.instance.coin++;
+
+            Debug.Log(GameManager.instance.coin);
+
+            return;
+        }
+
         rigid.simulated = false;
         ChangeAnim(State.Hit);
 
@@ -78,5 +92,13 @@ public class Player : MonoBehaviour
     private void ChangeAnim(State state)
     {
         anim.SetInteger("State", (int)state);
+    }
+
+    public void OnReset()
+    {
+        rigid.simulated = true;
+        transform.position = new Vector2(transform.position.x, 1f);
+
+        gameObject.SetActive(false);
     }
 }

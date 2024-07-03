@@ -9,13 +9,35 @@ public class DataManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Start()
     {
         rankDatas = LoadRankData();
+
+        if (rankDatas == null)
+        {
+            rankDatas = new RankData[]
+            {
+                new RankData {playerId = -1, score = 0f},
+                new RankData {playerId = -1, score = 0f},
+                new RankData {playerId = -1, score = 0f},
+                new RankData {playerId = -1, score = 0f},
+                new RankData {playerId = -1, score = 0f},
+            };
+        }
     }
+
+    // RankData ========================================================================================================================
 
     public void SaveRankData()
     {
@@ -23,47 +45,28 @@ public class DataManager : MonoBehaviour
 
         // JSON 직렬화
         string jsonData = JsonHelper.ToJson(rankDatas, true);
+
         // 파일 저장
         File.WriteAllText(filePath, jsonData);
     }
 
     public void UpdateRankData(RankData rankData)
     {
-        if (rankDatas == null)
-        {
-            rankDatas = new RankData[]
-            {
-                new RankData {playerId = 0, score = 0f},
-                new RankData {playerId = 0, score = 0f},
-                new RankData {playerId = 0, score = 0f},
-                new RankData {playerId = 0, score = 0f},
-                new RankData {playerId = 0, score = 0f},
-            };
-        }
-
         for (int index = 0; index < rankDatas.Length; index++)
         {
             if (rankData.score > rankDatas[index].score)
             {
                 int saveIndex = index;
 
-                Debug.Log("SaveIndex : " + saveIndex);
-
                 // 랭킹 뒤로 밀기
-                //for (int j = rankDatas.Length - 1; j > saveIndex; j--)
-                //{
-                //    rankDatas[j + 1] = rankDatas[j];
-                //}
+                for (int j = rankDatas.Length - 2; j >= saveIndex; j--)
+                {
+                    rankDatas[j + 1] = rankDatas[j];
+                }
 
-                //rankDatas[saveIndex] = rankData;
+                rankDatas[saveIndex] = rankData;
                 break;
             }
-        }
-
-        // 랭크데이터 출력
-        for (int i = 0; i < rankDatas.Length; i++)
-        {
-            Debug.Log("PlayerId : " + rankDatas[i].playerId + "  |  " + "Score : " + rankDatas[i].score);
         }
     }
 
@@ -73,7 +76,7 @@ public class DataManager : MonoBehaviour
 
         if (!File.Exists(filePath))
         {
-            Debug.Log("File Load Fail!");
+            Debug.Log("RankData.json Load Fail!");
             return null;
         }
 

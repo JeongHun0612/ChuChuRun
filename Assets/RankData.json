@@ -2,23 +2,23 @@
     "item": [
         {
             "playerId": 0,
-            "score": 0.0
-        },
-        {
-            "playerId": 1,
-            "score": 0.0
+            "score": 71.69033813476563
         },
         {
             "playerId": 0,
-            "score": 0.0
+            "score": 63.19096374511719
         },
         {
             "playerId": 1,
-            "score": 0.0
+            "score": 54.53151321411133
         },
         {
             "playerId": 0,
-            "score": 0.0
+            "score": 51.28708267211914
+        },
+        {
+            "playerId": 1,
+            "score": 37.80910110473633
         }
     ]
 }

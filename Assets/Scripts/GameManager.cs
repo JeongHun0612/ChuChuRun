@@ -5,29 +5,33 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    const float ORIGIN_SPEED = 3f;
+    const float ORIGIN_SPEED = 4f;
 
     [Header("# Game Control")]
     public bool isLive;
     public int playerId;
     public float globalSpeed;
     public float score;
+    public int coin;
+    public Scroller[] scrollers;
 
     [Header("# GameOjbect")]
     public Player player;
-    public GameManager uiScore;
     public GameObject uiGameOver;
-
 
     private void Awake()
     {
         instance = this;
+        InitPlayerPrefsData();
+    }
 
+    private void Start()
+    {
         isLive = false;
-
-        InitPlayerPrefs();
+        SoundManager.instance.PlayBGM(SoundManager.BGM.Title);
 
         playerId = PlayerPrefs.GetInt("PlayerId");
+        coin = PlayerPrefs.GetInt("Coin");
     }
 
     private void Update()
@@ -41,18 +45,12 @@ public class GameManager : MonoBehaviour
 
     public void GameStart()
     {
-        isLive = true;
-
-        player.gameObject.SetActive(true);
-
         SoundManager.instance.PlaySFX(SoundManager.SFX.Click);
 
-        SoundManager.instance.PlayBGM(SoundManager.BGM.Run);
-    }
+        isLive = true;
+        player.gameObject.SetActive(true);
 
-    public void GameReStart()
-    {
-        SceneManager.LoadScene(0);
+        SoundManager.instance.PlayBGM(SoundManager.BGM.Run);
     }
 
     public void GameOver()
@@ -60,32 +58,52 @@ public class GameManager : MonoBehaviour
         isLive = false;
         uiGameOver.SetActive(true);
 
-        Debug.Log(score);
-
-        float highScore = PlayerPrefs.GetFloat("Score");
-        PlayerPrefs.SetFloat("Score", Mathf.Max(highScore, score));
-
-
         // 현재 랭크 데이터 업데이트
         RankData rankData = new RankData { playerId = this.playerId, score = this.score };
         DataManager.instance.UpdateRankData(rankData);
     }
 
-    public void SelectCharcter()
+    public void GameReStart()
     {
-        PlayerPrefs.SetInt("PlayerId", playerId);
-    }
+        SoundManager.instance.PlaySFX(SoundManager.SFX.Click);
 
-    private void InitPlayerPrefs()
-    {
-        if (!PlayerPrefs.HasKey("Score"))
+        // 데이터 리셋
+        score = 0f;
+        player.OnReset();
+
+        foreach (Scroller scroller in scrollers)
         {
-            PlayerPrefs.SetFloat("Score", 0);
+            scroller.OnReset();
         }
 
+        // 게임 시작
+        GameStart();
+    }
+
+    public void MoveTitleScene()
+    {
+        PlayerPrefs.SetInt("PlayerId", playerId);
+        PlayerPrefs.SetInt("Coin", coin);
+
+        SceneManager.LoadScene(0);
+    }
+
+    private void InitPlayerPrefsData()
+    {
         if (!PlayerPrefs.HasKey("PlayerId"))
         {
             PlayerPrefs.SetInt("PlayerId", 0);
         }
+
+        if (!PlayerPrefs.HasKey("Coin"))
+        {
+            PlayerPrefs.SetInt("Coin", 0);
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.SetInt("PlayerId", playerId);
+        PlayerPrefs.SetInt("Coin", coin);
     }
 }
