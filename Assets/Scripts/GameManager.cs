@@ -45,8 +45,6 @@ public class GameManager : MonoBehaviour
 
     public void GameStart()
     {
-        SoundManager.instance.PlaySFX(SoundManager.SFX.Click);
-
         isLive = true;
         player.gameObject.SetActive(true);
 

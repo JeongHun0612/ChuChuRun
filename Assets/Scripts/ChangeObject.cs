@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ChangeObject : MonoBehaviour
 {
-    public GameObject coin;
+    public GameObject[] coins;
     public float coinPerRate;
 
     private GameObject[] objs;
@@ -35,6 +35,11 @@ public class ChangeObject : MonoBehaviour
 
         // ·£´ý È®·ü·Î ÄÚÀÎ »ý¼º
         float coinRan = Random.Range(0f, 1f);
-        coin.SetActive(coinRan <= coinPerRate);
+        int ranIdx = Random.Range(0, coins.Length);
+
+        for (int index = 0; index < coins.Length; index++)
+        {
+            coins[index].SetActive(ranIdx == index && coinRan <= coinPerRate);
+        }
     }
 }

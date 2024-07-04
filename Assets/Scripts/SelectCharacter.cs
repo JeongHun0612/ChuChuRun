@@ -3,16 +3,16 @@ using UnityEngine.UI;
 
 public class SelectCharacter : MonoBehaviour
 {
+    private Image frameImage;
+
     public int playerId;
     public SelectCharacter[] chars;
-
-    private Image image;
-    private Animator anim;
+    public Image charImage;
+    public Animator charAnim;
 
     private void Awake()
     {
-        image = GetComponent<Image>();
-        anim = GetComponent<Animator>();
+        frameImage = GetComponent<Image>();
     }
 
     private void OnEnable()
@@ -32,7 +32,8 @@ public class SelectCharacter : MonoBehaviour
 
     private void ChangeSelect(bool isSelect)
     {
-        anim.SetBool("IsSelect", isSelect);
-        image.color = (isSelect) ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0.5f);
+        charAnim.SetBool("IsSelect", isSelect);
+        frameImage.color = (isSelect) ? Color.white : new Color(0.6f, 0.6f, 0.6f, 1f);
+        charImage.color = (isSelect) ? Color.white : new Color(0.6f, 0.6f, 0.6f, 1f);
     }
 }

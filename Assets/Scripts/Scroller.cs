@@ -20,7 +20,15 @@ public class Scroller : MonoBehaviour
 
         for (int index = 0; index < transform.childCount; index++)
         {
+            // 위치 값 리셋
             transform.GetChild(index).GetComponent<RePosition>().OnResetPos();
+
+            // 장애물 리셋
+            ChangeObject changeObject = transform.GetChild(index).GetComponent<ChangeObject>();
+            if (changeObject)
+            {
+                changeObject.Change();
+            }
         }
     }
 }
