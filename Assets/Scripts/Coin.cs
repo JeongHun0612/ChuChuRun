@@ -12,6 +12,6 @@ public class Coin : MonoBehaviour
 
     private void LateUpdate()
     {
-        coinText.text = GameManager.instance.coin.ToString();
+        coinText.text = GameManager.coin.ToString();
     }
 }

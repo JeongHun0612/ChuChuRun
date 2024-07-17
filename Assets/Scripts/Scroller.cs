@@ -3,11 +3,11 @@ using UnityEngine;
 public class Scroller : MonoBehaviour
 {
     public float speedRate;
-    public bool isTest;
+    public bool isTitleMove;
 
     private void Update()
     {
-        if (!GameManager.instance.isLive && !isTest) return;
+        if (!GameManager.instance.isLive && !isTitleMove) return;
 
         // 오브젝트 이동
         float totalSpeed = GameManager.instance.globalSpeed * speedRate * Time.deltaTime;

@@ -17,12 +17,12 @@ public class SelectCharacter : MonoBehaviour
 
     private void OnEnable()
     {
-        ChangeSelect(playerId == GameManager.instance.playerId);
+        ChangeSelect(playerId == GameManager.playerId);
     }
 
     public void OnSelect()
     {
-        GameManager.instance.playerId = playerId;
+        GameManager.playerId = playerId;
 
         for (int index = 0; index < chars.Length; index++)
         {

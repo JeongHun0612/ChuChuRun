@@ -7,12 +7,10 @@ public class Rank : MonoBehaviour
 
     private void OnEnable()
     {
-        RankData[] rankDatas = DataManager.instance.rankDatas;
-
-        for (int index = 0; index < rankDatas.Length; index++)
+        for (int index = 0; index < GameManager.rankDatas.Length; index++)
         {
-            int playerId = rankDatas[index].playerId + 1;
-            float score = rankDatas[index].score;
+            int playerId = GameManager.rankDatas[index].playerId + 1;
+            float score = GameManager.rankDatas[index].score;
 
             transform.GetChild(index).GetComponentInChildren<Image>().sprite = iconSprites[playerId];
             transform.GetChild(index).GetComponentInChildren<Text>().text = score.ToString("F0");

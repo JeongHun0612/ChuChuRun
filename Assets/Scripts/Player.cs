@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
     private void OnEnable()
     {
         // 선택한 캐릭터의 따라 애니메이션 변경
-        anim.runtimeAnimatorController = runtimeAnim[GameManager.instance.playerId];
+        anim.runtimeAnimatorController = runtimeAnim[GameManager.playerId];
         ChangeAnim(State.Jump);
     }
 
@@ -74,9 +74,7 @@ public class Player : MonoBehaviour
             SoundManager.instance.PlaySFX(SoundManager.SFX.Coin);
 
             collision.gameObject.SetActive(false);
-            GameManager.instance.coin++;
-
-            Debug.Log(GameManager.instance.coin);
+            GameManager.coin++;
 
             return;
         }

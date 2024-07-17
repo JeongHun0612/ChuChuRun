@@ -6,18 +6,22 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     const float ORIGIN_SPEED = 4f;
+    const int RANK_CNT = 5;
+
+    [Header("# GameData")]
+    public static int playerId = -1;
+    public static int coin = -1;
+    public static RankData[] rankDatas;
 
     [Header("# Game Control")]
     public bool isLive;
-    public int playerId;
     public float globalSpeed;
     public float score;
-    public int coin;
-    public Scroller[] scrollers;
 
     [Header("# GameOjbect")]
     public Player player;
     public GameObject uiGameOver;
+    public Scroller[] scrollers;
 
     private void Awake()
     {
@@ -28,10 +32,13 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         isLive = false;
+        globalSpeed = ORIGIN_SPEED;
+
         SoundManager.instance.PlayBGM(SoundManager.BGM.Title);
 
-        playerId = PlayerPrefs.GetInt("PlayerId");
-        coin = PlayerPrefs.GetInt("Coin");
+        if (playerId == -1) playerId = PlayerPrefs.GetInt("PlayerId");
+        if (coin == -1) coin = PlayerPrefs.GetInt("Coin");
+        LoadRankData(ref rankDatas);
     }
 
     private void Update()
@@ -57,8 +64,10 @@ public class GameManager : MonoBehaviour
         uiGameOver.SetActive(true);
 
         // 현재 랭크 데이터 업데이트
-        RankData rankData = new RankData { playerId = this.playerId, score = this.score };
-        DataManager.instance.UpdateRankData(rankData);
+        UpdateRankData(new RankData { playerId = GameManager.playerId, score = this.score });
+
+        // PlayerPrefs 저장
+        SavePlayerPrefs();
     }
 
     public void GameReStart()
@@ -80,10 +89,45 @@ public class GameManager : MonoBehaviour
 
     public void MoveTitleScene()
     {
-        PlayerPrefs.SetInt("PlayerId", playerId);
-        PlayerPrefs.SetInt("Coin", coin);
-
         SceneManager.LoadScene(0);
+    }
+
+    private void LoadRankData(ref RankData[] rankDatas)
+    {
+        if (rankDatas != null) return;
+
+        rankDatas = new RankData[RANK_CNT];
+
+        for (int index = 0; index < rankDatas.Length; index++)
+        {
+            rankDatas[index].playerId = PlayerPrefs.GetInt("Rank" + index + "_Id");
+            rankDatas[index].score = PlayerPrefs.GetFloat("Rank" + index + "_Score");
+        }
+    }
+
+    private void SaveRankData(int rank, int playerId, float score)
+    {
+        PlayerPrefs.SetInt("Rank" + rank + "_Id", playerId);
+        PlayerPrefs.SetFloat("Rank" + rank + "_Score", score);
+    }
+
+    private void UpdateRankData(RankData rankData)
+    {
+        for (int i = 0; i < rankDatas.Length; i++)
+        {
+            if (rankData.score < rankDatas[i].score) continue;
+
+            int saveIndex = i;
+
+            // 랭킹 뒤로 밀기
+            for (int j = rankDatas.Length - 2; j >= saveIndex; j--)
+            {
+                rankDatas[j + 1] = rankDatas[j];
+            }
+
+            rankDatas[saveIndex] = rankData;
+            break;
+        }
     }
 
     private void InitPlayerPrefsData()
@@ -97,11 +141,37 @@ public class GameManager : MonoBehaviour
         {
             PlayerPrefs.SetInt("Coin", 0);
         }
+
+        if (!PlayerPrefs.HasKey("Rank0_Id"))
+        {
+            for (int index = 0; index < RANK_CNT; index++)
+            {
+                SaveRankData(index, -1, 0f);
+            }
+        }
     }
 
     private void OnApplicationQuit()
     {
+        SavePlayerPrefs();
+
+        PlayerPrefs.Save();
+    }
+
+    private void SavePlayerPrefs()
+    {
+        for (int index = 0; index < rankDatas.Length; index++)
+        {
+            SaveRankData(index, rankDatas[index].playerId, rankDatas[index].score);
+        }
+
         PlayerPrefs.SetInt("PlayerId", playerId);
         PlayerPrefs.SetInt("Coin", coin);
     }
+}
+
+public struct RankData
+{
+    public int playerId;
+    public float score;
 }
